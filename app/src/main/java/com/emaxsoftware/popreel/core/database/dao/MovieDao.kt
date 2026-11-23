@@ -20,8 +20,8 @@ abstract class MovieDao {
     @Query("SELECT COUNT(*) FROM movies")
     abstract fun observeCount(): Flow<Int>
 
-    @Query("SELECT name FROM genres ORDER BY name")
-    abstract fun observeGenres(): Flow<List<String>>
+    @Query("SELECT * FROM genres ORDER BY movieCount DESC, name")
+    abstract fun observeGenres(): Flow<List<GenreEntity>>
 
     @Query("SELECT * FROM movies WHERE id = :id")
     abstract fun observeMovie(id: String): Flow<MovieEntity?>

@@ -1,6 +1,7 @@
 package com.emaxsoftware.popreel.feature.swipe
 
 import com.emaxsoftware.popreel.core.data.MovieFeed
+import com.emaxsoftware.popreel.core.model.Genre
 import com.emaxsoftware.popreel.core.model.Movie
 import com.emaxsoftware.popreel.core.model.MovieChoice
 import com.emaxsoftware.popreel.ui.state.CatalogStatus
@@ -8,7 +9,9 @@ import com.emaxsoftware.popreel.ui.state.ListState
 
 data class SwipeUiState(
     val catalog: CatalogStatus = CatalogStatus(),
-    val filter: DeckFilter = DeckFilter.Trending,
+    val filter: DeckFilter = DeckFilter.Mode.Trending,
+    /** Genres the deck can be filtered to, most movies first. */
+    val genres: List<Genre> = emptyList(),
     /** Unmarked movies for [filter], as stored locally. */
     val queue: ListState<Movie> = ListState(),
     /** This session's swipes, oldest first; backs undo. */
@@ -35,9 +38,30 @@ data class SwipeUiState(
         get() = if (queue.items.size >= SwipeViewModel.QUEUE_SIZE) "${remaining.size}+" else "${remaining.size}"
 }
 
-enum class DeckFilter(val label: String, val feed: MovieFeed, val genre: String? = null) {
-    Trending("Trending", MovieFeed.Trending),
-    SciFi("Sci-Fi", MovieFeed.Trending, genre = "Science Fiction"),
-    TopRated("Top Rated", MovieFeed.TopRated),
-    NewReleases("New Releases", MovieFeed.Newest),
+/** What the deck deals: a feed mode, or trending films in one genre. */
+sealed interface DeckFilter {
+    /** Chip key: a [Mode] label or a genre name. */
+    val key: String
+    val feed: MovieFeed
+    val genre: String?
+
+    enum class Mode(val label: String, override val feed: MovieFeed) : DeckFilter {
+        Trending("Trending", MovieFeed.Trending),
+        TopRated("Top Rated", MovieFeed.TopRated),
+        NewReleases("New Releases", MovieFeed.Newest),
+        ;
+
+        override val key: String get() = label
+        override val genre: String? get() = null
+    }
+
+    data class ByGenre(val name: String) : DeckFilter {
+        override val key: String get() = name
+        override val feed: MovieFeed get() = MovieFeed.Trending
+        override val genre: String get() = name
+    }
+
+    companion object {
+        fun fromKey(key: String): DeckFilter = Mode.entries.firstOrNull { it.label == key } ?: ByGenre(key)
+    }
 }

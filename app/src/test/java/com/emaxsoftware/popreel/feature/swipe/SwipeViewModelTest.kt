@@ -37,13 +37,22 @@ class SwipeViewModelTest {
     @Test
     fun `queue only asks for unmarked movies, per filter`() = runTest(mainRule.dispatcher) {
         val (viewModel, _) = createViewModel()
-        viewModel.onFilterSelect(DeckFilter.SciFi)
+        viewModel.onFilterSelect(DeckFilter.fromKey("Science Fiction"))
         advanceUntilIdle()
 
         assertEquals(
             FakeCatalogRepository.FeedRequest(MovieFeed.Trending, "Science Fiction", excludeMarked = true),
             catalog.feedRequests.last(),
         )
+
+        viewModel.onFilterSelect(DeckFilter.fromKey("Top Rated"))
+        advanceUntilIdle()
+
+        assertEquals(
+            FakeCatalogRepository.FeedRequest(MovieFeed.TopRated, null, excludeMarked = true),
+            catalog.feedRequests.last(),
+        )
+        assertEquals(listOf("Drama", "Science Fiction"), viewModel.uiState.value.genres.map { it.name })
     }
 
     @Test

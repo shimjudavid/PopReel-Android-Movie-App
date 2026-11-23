@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import com.emaxsoftware.popreel.core.database.PopReelDatabase
+import com.emaxsoftware.popreel.core.model.Genre
 import com.emaxsoftware.popreel.core.network.PopReelApiService
 import com.emaxsoftware.popreel.core.network.dto.CatalogDto
 import com.emaxsoftware.popreel.core.network.dto.MovieDto
@@ -47,14 +48,19 @@ class OfflineFirstCatalogRepositoryTest {
     fun tearDown() = db.close()
 
     @Test
-    fun `successful sync stores movies and genres`() = runTest {
-        api.response = { CatalogDto(listOf(dto("a", listOf("Drama", "Crime")), dto("b", listOf("Drama")))) }
+    fun `successful sync stores movies and well-stocked genres`() = runTest {
+        val dramas = (1..MIN_MOVIES_PER_GENRE).map { dto("d$it", listOf("Drama", "Crime")) }
+        api.response = { CatalogDto(dramas + dto("s", listOf("Drama", "Slasher"))) }
 
         assertTrue(repository.sync().isSuccess)
 
         assertEquals(CatalogSyncState.Synced, repository.syncState.value)
-        assertEquals(2, repository.movieCount.first())
-        assertEquals(listOf("Crime", "Drama"), repository.genres.first())
+        assertEquals(MIN_MOVIES_PER_GENRE + 1, repository.movieCount.first())
+        // Slasher has a single movie, so it is not offered as a filter; Drama leads with the most movies.
+        assertEquals(
+            listOf(Genre("Drama", MIN_MOVIES_PER_GENRE + 1), Genre("Crime", MIN_MOVIES_PER_GENRE)),
+            repository.genres.first(),
+        )
     }
 
     @Test

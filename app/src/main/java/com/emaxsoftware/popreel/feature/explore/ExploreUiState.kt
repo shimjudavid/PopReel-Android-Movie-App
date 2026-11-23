@@ -1,6 +1,7 @@
 package com.emaxsoftware.popreel.feature.explore
 
 import com.emaxsoftware.popreel.core.data.MovieFeed
+import com.emaxsoftware.popreel.core.model.Genre
 import com.emaxsoftware.popreel.core.model.Movie
 import com.emaxsoftware.popreel.core.model.MovieChoice
 import com.emaxsoftware.popreel.ui.state.CatalogStatus
@@ -8,7 +9,8 @@ import com.emaxsoftware.popreel.ui.state.ListState
 
 data class ExploreUiState(
     val catalog: CatalogStatus = CatalogStatus(),
-    val genres: List<String> = listOf(ALL_GENRES),
+    /** Filterable genres, most movies first; [ALL_GENRES] is offered separately. */
+    val genres: List<Genre> = emptyList(),
     val selectedGenre: String = ALL_GENRES,
     val sort: CatalogSort = CatalogSort.Trending,
     /** First item is the featured hero; the rest fill the horizontal reel. */

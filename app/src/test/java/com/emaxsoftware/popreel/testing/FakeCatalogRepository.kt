@@ -3,6 +3,7 @@ package com.emaxsoftware.popreel.testing
 import com.emaxsoftware.popreel.core.data.CatalogRepository
 import com.emaxsoftware.popreel.core.data.CatalogSyncState
 import com.emaxsoftware.popreel.core.data.MovieFeed
+import com.emaxsoftware.popreel.core.model.Genre
 import com.emaxsoftware.popreel.core.model.Movie
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +27,7 @@ class FakeCatalogRepository(
 
     override val syncState = MutableStateFlow<CatalogSyncState>(CatalogSyncState.Synced)
     override val movieCount: Flow<Int> = this.movies.map { it.size }
-    override val genres: Flow<List<String>> = MutableStateFlow(listOf("Drama", "Science Fiction"))
+    override val genres: Flow<List<Genre>> = MutableStateFlow(listOf(Genre("Drama", 3), Genre("Science Fiction", 2)))
 
     override fun observeFeed(feed: MovieFeed, genre: String?, limit: Int, excludeMarked: Boolean): Flow<List<Movie>> {
         feedRequests += FeedRequest(feed, genre, excludeMarked)

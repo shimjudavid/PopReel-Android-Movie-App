@@ -32,7 +32,7 @@ class SwipeViewModel @Inject constructor(
     private val choiceRepository: MovieChoiceRepository,
 ) : ViewModel(), SwipeActions {
 
-    private val filter = MutableStateFlow(DeckFilter.Trending)
+    private val filter = MutableStateFlow<DeckFilter>(DeckFilter.Mode.Trending)
     private val history = MutableStateFlow<List<SwipeRecord>>(emptyList())
 
     private val _effects = Channel<SwipeEffect>(Channel.BUFFERED)
@@ -54,12 +54,12 @@ class SwipeViewModel @Inject constructor(
 
     val uiState: StateFlow<SwipeUiState> = combine(
         combine(catalog.movieCount, catalog.syncState, ::CatalogStatus),
-        filter,
+        combine(filter, catalog.genres.catch { emit(emptyList()) }, ::Pair),
         queue,
         history,
         combine(choiceRepository.choices.catch { emit(emptyMap()) }, review, ::Pair),
-    ) { status, filter, queue, history, (choices, review) ->
-        SwipeUiState(status, filter, queue, history, choices, review)
+    ) { status, (filter, genres), queue, history, (choices, review) ->
+        SwipeUiState(status, filter, genres, queue, history, choices, review)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SwipeUiState())
 
     override fun onFilterSelect(filter: DeckFilter) {

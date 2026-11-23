@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.emaxsoftware.popreel.core.data.CatalogRepository
 import com.emaxsoftware.popreel.core.data.MovieChoiceRepository
 import com.emaxsoftware.popreel.core.data.MovieFeed
+import com.emaxsoftware.popreel.core.model.Genre
 import com.emaxsoftware.popreel.core.model.Movie
 import com.emaxsoftware.popreel.core.model.MovieChoice
 import com.emaxsoftware.popreel.core.model.MovieTag
@@ -84,7 +85,7 @@ class ExploreViewModel @Inject constructor(
         catalog.genres.catch { emit(emptyList()) },
         selectedGenre,
         sort,
-    ) { genres, genre, sort -> Filters(listOf(ExploreUiState.ALL_GENRES) + genres, genre, sort) }
+    ) { genres, genre, sort -> Filters(genres, genre, sort) }
 
     val uiState: StateFlow<ExploreUiState> = combine(
         catalogStatus,
@@ -121,7 +122,7 @@ class ExploreViewModel @Inject constructor(
         viewModelScope.launch { catalog.sync() }
     }
 
-    private data class Filters(val genres: List<String>, val selectedGenre: String, val sort: CatalogSort)
+    private data class Filters(val genres: List<Genre>, val selectedGenre: String, val sort: CatalogSort)
 
     private companion object {
         const val FEED_SIZE = 11 // 1 hero + 10 reel cards

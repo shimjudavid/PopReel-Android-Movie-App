@@ -1,5 +1,6 @@
 package com.emaxsoftware.popreel.core.data
 
+import com.emaxsoftware.popreel.core.model.Genre
 import com.emaxsoftware.popreel.core.model.Movie
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,7 +12,8 @@ import kotlinx.coroutines.flow.StateFlow
 interface CatalogRepository {
     val syncState: StateFlow<CatalogSyncState>
     val movieCount: Flow<Int>
-    val genres: Flow<List<String>>
+    /** Filterable genres, most movies first. */
+    val genres: Flow<List<Genre>>
 
     /** [excludeMarked] drops movies the user already liked, disliked or marked unseen. */
     fun observeFeed(feed: MovieFeed, genre: String?, limit: Int, excludeMarked: Boolean = false): Flow<List<Movie>>

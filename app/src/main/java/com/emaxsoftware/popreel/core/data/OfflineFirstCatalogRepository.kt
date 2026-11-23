@@ -3,8 +3,8 @@ package com.emaxsoftware.popreel.core.data
 import android.database.sqlite.SQLiteException
 import com.emaxsoftware.popreel.core.common.IoDispatcher
 import com.emaxsoftware.popreel.core.database.dao.MovieDao
-import com.emaxsoftware.popreel.core.database.entity.GenreEntity
 import com.emaxsoftware.popreel.core.database.entity.MovieEntity
+import com.emaxsoftware.popreel.core.model.Genre
 import com.emaxsoftware.popreel.core.model.Movie
 import com.emaxsoftware.popreel.core.network.PopReelApiService
 import com.emaxsoftware.popreel.core.network.serverMessage
@@ -39,7 +39,9 @@ class OfflineFirstCatalogRepository @Inject constructor(
 
     override val movieCount: Flow<Int> = movieDao.observeCount().mapStorageErrors()
 
-    override val genres: Flow<List<String>> = movieDao.observeGenres().mapStorageErrors()
+    override val genres: Flow<List<Genre>> = movieDao.observeGenres()
+        .map { genres -> genres.map { Genre(it.name, it.movieCount) } }
+        .mapStorageErrors()
 
     override fun observeFeed(feed: MovieFeed, genre: String?, limit: Int, excludeMarked: Boolean): Flow<List<Movie>> {
         val rows = when (feed) {
@@ -93,7 +95,7 @@ class OfflineFirstCatalogRepository @Inject constructor(
     private suspend fun downloadAndStore(): Result<Unit> = try {
         val catalog = api.catalog()
         val movies = catalog.movies.map { it.toEntity() }
-        val genres = movies.flatMap { it.genreNames() }.distinct().map(::GenreEntity)
+        val genres = browsableGenres(movies)
         val trivia = catalog.trivia.filter { it.options.size == 4 && it.answerIndex in 0..3 }.map { it.toEntity() }
         movieDao.replaceCatalog(movies, genres, trivia)
         Result.success(Unit)

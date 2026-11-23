@@ -46,7 +46,7 @@ import com.emaxsoftware.popreel.core.data.CatalogSyncState
 import com.emaxsoftware.popreel.core.model.MovieChoice
 import com.emaxsoftware.popreel.ui.components.EmptyBlock
 import com.emaxsoftware.popreel.ui.components.ErrorBlock
-import com.emaxsoftware.popreel.ui.components.GenreChipRow
+import com.emaxsoftware.popreel.ui.components.GenreFilterBar
 import com.emaxsoftware.popreel.ui.components.LoadingBlock
 import com.emaxsoftware.popreel.ui.components.Pill
 import com.emaxsoftware.popreel.ui.components.StatusDot
@@ -154,10 +154,12 @@ private fun SwipeContent(
             }
         }
 
-        GenreChipRow(
-            genres = DeckFilter.entries.map { it.label },
-            selected = uiState.filter.label,
-            onSelect = { label -> actions.onFilterSelect(DeckFilter.entries.first { it.label == label }) },
+        GenreFilterBar(
+            leading = DeckFilter.Mode.entries.map { it.label },
+            genres = uiState.genres,
+            selected = uiState.filter.key,
+            onSelect = { key -> actions.onFilterSelect(DeckFilter.fromKey(key)) },
+            maxGenres = 4,
             shape = MaterialTheme.shapes.medium,
             modifier = Modifier.padding(bottom = spacing.sm),
         )

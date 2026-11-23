@@ -44,6 +44,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.emaxsoftware.popreel.core.data.CatalogSyncState
 import com.emaxsoftware.popreel.core.data.DataError
+import com.emaxsoftware.popreel.core.model.Genre
 import com.emaxsoftware.popreel.core.model.Movie
 import com.emaxsoftware.popreel.core.model.MovieChoice
 import com.emaxsoftware.popreel.ui.components.CatalogSearchBar
@@ -51,7 +52,7 @@ import com.emaxsoftware.popreel.ui.components.CatalogStatusRow
 import com.emaxsoftware.popreel.ui.components.EmptyBlock
 import com.emaxsoftware.popreel.ui.components.ErrorBlock
 import com.emaxsoftware.popreel.ui.components.FeaturedHeroCard
-import com.emaxsoftware.popreel.ui.components.GenreChipRow
+import com.emaxsoftware.popreel.ui.components.GenreFilterBar
 import com.emaxsoftware.popreel.ui.components.LoadingBlock
 import com.emaxsoftware.popreel.ui.components.MoviePosterCard
 import com.emaxsoftware.popreel.ui.components.PosterCardStyle
@@ -183,7 +184,8 @@ private fun LazyGridScope.catalogContent(
     }
 
     fullWidthItem("genres") {
-        GenreChipRow(
+        GenreFilterBar(
+            leading = listOf(ExploreUiState.ALL_GENRES),
             genres = uiState.genres,
             selected = uiState.selectedGenre,
             onSelect = actions::onGenreSelect,
@@ -372,7 +374,7 @@ private fun ExploreContentPreview() {
         ExploreContent(
             uiState = ExploreUiState(
                 catalog = CatalogStatus(movieCount = 9919, sync = CatalogSyncState.Synced),
-                genres = listOf(ExploreUiState.ALL_GENRES, "Action", "Drama", "Science Fiction"),
+                genres = listOf(Genre("Drama", 3749), Genre("Action", 2679), Genre("Science Fiction", 1274)),
                 feed = ListState.loaded(listOf(SampleCatalog.featured) + SampleCatalog.spotlight),
                 acclaimed = ListState.loaded(SampleCatalog.criticallyAcclaimed),
                 choices = mapOf(SampleCatalog.spotlight.first().id to MovieChoice.Liked),
