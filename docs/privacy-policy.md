@@ -1,8 +1,12 @@
+---
+title: PopReel Privacy Policy
+---
+
 # PopReel Privacy Policy
 
-_Effective date: [DATE OF PUBLICATION]_
+_Effective date: 23 November 2026_
 
-This policy explains what information the PopReel Android app ("PopReel", "the app") handles and why. PopReel is published by [DEVELOPER OR COMPANY NAME] ("we", "us").
+This policy explains what information the PopReel Android app ("PopReel", "the app") handles and why. PopReel is published by eMax Software ("we", "us").
 
 ## Summary
 
@@ -66,4 +70,4 @@ If PopReel starts handling information differently, we will update this policy a
 
 ## Contact
 
-Questions about this policy: [CONTACT EMAIL OR WEB FORM].
+Questions about this policy: open an issue at https://github.com/shimjudavid/PopReel-Movie-Android-App/issues. Issues are public, so please don't include personal details you want kept private.
