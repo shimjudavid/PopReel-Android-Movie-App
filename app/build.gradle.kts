@@ -22,8 +22,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // Movie catalog API. Override for local backend work with
-        // -Ppopreel.apiBaseUrl=http://10.0.2.2:3000/ (debug builds allow cleartext to 10.0.2.2).
+        // Movie catalog API (HTTPS only). Point at another deployment with -Ppopreel.apiBaseUrl=https://…/
         val apiBaseUrl = providers.gradleProperty("popreel.apiBaseUrl")
             .getOrElse("https://movie-api-delta-six.vercel.app/")
         buildConfigField("String", "API_BASE_URL", "\"$apiBaseUrl\"")

@@ -14,7 +14,3 @@
 .cxx
 local.properties
 .kotlin
-
-# Backend: dependencies and the downloaded catalog (npm --prefix backend run setup recreates it)
-/data/
-/backend/node_modules/

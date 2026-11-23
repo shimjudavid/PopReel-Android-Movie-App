@@ -10,13 +10,7 @@ Kotlin, Jetpack Compose (Material 3), Hilt, Retrofit + kotlinx.serialization, Ro
 
 Open the project in Android Studio, or run `./gradlew :app:assembleDebug`. Unit tests: `./gradlew :app:testDebugUnitTest`.
 
-The app reads the hosted catalog API by default. To use the local backend instead:
-
-```bash
-npm --prefix backend run setup   # downloads the catalog into data/
-npm --prefix backend start       # serves http://127.0.0.1:3000
-./gradlew :app:assembleDebug -Ppopreel.apiBaseUrl=http://10.0.2.2:3000/
-```
+The app syncs its catalog from the hosted API at `https://movie-api-delta-six.vercel.app/`. To point a build at another HTTPS deployment, pass `-Ppopreel.apiBaseUrl=https://…/`.
 
 ## Privacy
 
