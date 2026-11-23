@@ -181,7 +181,7 @@ private fun TabsScaffold(
             bottomBar = { if (!useRail) PopReelBottomBar(current = tab, onNavigate = onTabSelect) },
         ) { innerPadding ->
             when (tab) {
-                PopReelDestination.Explore -> ExploreScreen(innerPadding, onOpenMovie, onShowMessage)
+                PopReelDestination.Explore -> ExploreScreen(innerPadding, onOpenMovie)
                 PopReelDestination.Swipe -> SwipeScreen(innerPadding, onOpenMovie, onShowMessage)
                 PopReelDestination.Genie -> GenieScreen(innerPadding, onOpenMovie, onOpenSwipe, onShowMessage)
                 PopReelDestination.Arcade -> ArcadeScreen(innerPadding, onPlayTrivia, onPlayPuzzle)

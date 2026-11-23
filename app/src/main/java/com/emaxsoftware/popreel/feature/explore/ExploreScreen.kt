@@ -76,7 +76,6 @@ import java.io.IOException
 fun ExploreScreen(
     contentPadding: PaddingValues,
     onOpenMovie: (String) -> Unit,
-    onShowMessage: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ExploreViewModel = hiltViewModel(),
 ) {
@@ -87,7 +86,6 @@ fun ExploreScreen(
         contentPadding = contentPadding,
         onOpenMovie = onOpenMovie,
         actions = viewModel,
-        onShowMessage = onShowMessage,
         modifier = modifier,
     )
 }
@@ -99,7 +97,6 @@ private fun ExploreContent(
     contentPadding: PaddingValues,
     onOpenMovie: (String) -> Unit,
     actions: ExploreActions,
-    onShowMessage: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var twoColumns by rememberSaveable { mutableStateOf(true) }
@@ -162,7 +159,6 @@ private fun ExploreContent(
                 gutter = gutter,
                 edge = edge,
                 actions = actions,
-                onShowMessage = onShowMessage,
                 onOpen = openDetails,
                 onToggleLayout = { twoColumns = !twoColumns },
                 twoColumns = twoColumns,
@@ -178,20 +174,12 @@ private fun LazyGridScope.catalogContent(
     gutter: Dp,
     edge: Modifier,
     actions: ExploreActions,
-    onShowMessage: (String) -> Unit,
     onOpen: (Movie) -> Unit,
     onToggleLayout: () -> Unit,
     twoColumns: Boolean,
 ) {
     fullWidthItem("search") {
-        CatalogSearchBar(
-            query = query,
-            onQueryChange = actions::onQueryChange,
-            onSearch = {},
-            onVoiceSearchClick = { onShowMessage("Voice search coming soon") },
-            onFilterClick = { onShowMessage("More filters coming soon") },
-            modifier = edge,
-        )
+        CatalogSearchBar(query = query, onQueryChange = actions::onQueryChange, modifier = edge)
     }
 
     fullWidthItem("genres") {
@@ -393,7 +381,6 @@ private fun ExploreContentPreview() {
             contentPadding = PaddingValues(),
             onOpenMovie = {},
             actions = object : ExploreActions {},
-            onShowMessage = {},
         )
     }
 }
@@ -415,7 +402,6 @@ private fun ExploreFirstLaunchOfflinePreview() {
             contentPadding = PaddingValues(),
             onOpenMovie = {},
             actions = object : ExploreActions {},
-            onShowMessage = {},
         )
     }
 }
