@@ -1,6 +1,7 @@
 package com.emaxsoftware.popreel.feature.settings
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,12 +10,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.OpenInNew
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -28,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -41,6 +47,8 @@ import com.emaxsoftware.popreel.ui.components.BackTopBar
 import com.emaxsoftware.popreel.ui.state.CatalogStatus
 import com.emaxsoftware.popreel.ui.state.userMessage
 import com.emaxsoftware.popreel.ui.theme.PopReelTheme
+
+const val PRIVACY_POLICY_URL = "https://shimjudavid.github.io/PopReel-Movie-Android-App/privacy-policy.html"
 
 @Composable
 fun SettingsScreen(
@@ -142,6 +150,29 @@ private fun SettingsContent(
                         enabled = uiState.catalog.sync != CatalogSyncState.Syncing,
                         shape = MaterialTheme.shapes.small,
                     ) { Text("Refresh catalog", style = MaterialTheme.typography.labelLarge, color = colors.primaryContainer) }
+                }
+
+                SettingsSection("About", null) {
+                    val uriHandler = LocalUriHandler.current
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 48.dp)
+                            .clickable(role = Role.Button, onClickLabel = "Open privacy policy") {
+                                uriHandler.openUri(PRIVACY_POLICY_URL)
+                            },
+                    ) {
+                        Column(Modifier.weight(1f)) {
+                            Text("Privacy policy", style = MaterialTheme.typography.titleSmall, color = colors.onSurface)
+                            Text(
+                                "What PopReel stores and where it connects. Opens in your browser.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = colors.onSurfaceVariant,
+                            )
+                        }
+                        Icon(Icons.AutoMirrored.Outlined.OpenInNew, contentDescription = null, tint = colors.primaryContainer)
+                    }
                 }
             }
         }
