@@ -29,7 +29,7 @@ class OfflineFirstCatalogRepository @Inject constructor(
     private val api: PopReelApiService,
     private val movieDao: MovieDao,
     private val json: Json,
-    @IoDispatcher private val io: CoroutineDispatcher,
+    @param:IoDispatcher private val io: CoroutineDispatcher,
 ) : CatalogRepository {
 
     private val _syncState = MutableStateFlow<CatalogSyncState>(CatalogSyncState.Idle)

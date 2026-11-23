@@ -15,7 +15,7 @@ interface TriviaRepository {
 
 class RoomTriviaRepository @Inject constructor(
     private val dao: TriviaDao,
-    @IoDispatcher private val io: CoroutineDispatcher,
+    @param:IoDispatcher private val io: CoroutineDispatcher,
 ) : TriviaRepository {
 
     override suspend fun newRound(size: Int): Result<List<TriviaQuestion>> = withContext(io) {
