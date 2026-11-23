@@ -1,4 +1,4 @@
-# PopReel-Movie-Android-App
+# PopReel-Android-Movie-App
 
 PopReel is an Android movie discovery app built with Jetpack Compose and Material 3: browse and search a catalog of ~9,900 films, swipe to like, dislike or mark films as not seen, get explained recommendations from the Genie, and play movie trivia and poster puzzles in the Cinema Arcade. The catalog is cached locally, so browsing and your choices work offline after the first download.
 
