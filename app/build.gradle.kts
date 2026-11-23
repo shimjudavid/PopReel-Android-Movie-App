@@ -28,8 +28,23 @@ android {
         buildConfigField("String", "API_BASE_URL", "\"$apiBaseUrl\"")
     }
 
+    // Release key lives outside the repo: set these in ~/.gradle/gradle.properties.
+    // Without them, release builds are left unsigned.
+    val releaseStoreFile = providers.gradleProperty("POPREEL_RELEASE_STORE_FILE").orNull
+    signingConfigs {
+        if (releaseStoreFile != null) {
+            create("release") {
+                storeFile = file(releaseStoreFile)
+                storePassword = providers.gradleProperty("POPREEL_RELEASE_STORE_PASSWORD").get()
+                keyAlias = providers.gradleProperty("POPREEL_RELEASE_KEY_ALIAS").get()
+                keyPassword = providers.gradleProperty("POPREEL_RELEASE_KEY_PASSWORD").get()
+            }
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.findByName("release")
             // Full R8 over app and library code (the previous optimization{} block was scoped to
             // androidx/kotlin only). Libraries here ship their own consumer keep rules.
             isMinifyEnabled = true
